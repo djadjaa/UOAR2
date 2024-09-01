@@ -1,0 +1,57 @@
+pc registar broji do koje smo instrukcije stigli
+lr registar sluzi za upisivanje adrese na koju zelimo da se vratimo tokom fje, da znamo kako da se vratimo iz fje
+sp = rsp
+fp = rbp
+argumenti od r0 do r3 prenose redom ostali reg preko steka (obrnuti poredak)
+r0 = eax
+velicina registara 4B
+push moze da primi listu registara, u rastucem poretku  prema konvenciji, kao i pop
+.align 2 poravnaj memoriju na kojoj se nalazis na 2 bita tako da bude adresa memorije deljiva sa 4
+adr=lea
+call=bl=branch with link, predji an drugu granu 'programa'
+u pc upisuje se povratna adresa (lr) tj da smo stigli do kraja
+
+pop {fp, lr}
+mov pc,lr
+
+je isto sto i
+
+pop {fp, pc}
+
+komentari se pisu @ simbolom
+
+ip registar sluzi za skok sa instrukcije na drugu do kraja da bismo upisali rezultat na odredjenoj adresi, pristupa udaljenim registrima i skace za odredjen broj bajtova
+
+.data
+poruka: .asciz "Hello world\n"
+.text
+
+ovo nije ispravno, u .text sekciji se obavlja kod, u .data se zapocinje inicijalizacija podataka, desice se promene u registrima
+u armu adresni operand ne postoji tkd ako koristimo prvo .data pa .text labela koju stavimo u registar r0 pod operacijom adr ta labela ce se tumaciti kao druge instrukcije
+pc registar ide po kodu i gleda dokle smo stigli, adr gleda gde je instrukcija i trazi gde se nalazi labela i u r0 ce da se upise razlika izmedju r0, pc i razlike izmedju pc registra i registra gde se nalazi labela i sve to kako bi se upisala adresa labele tamo gde treba, tj tumacice se labela kao razlika
+
+status registar <=> flags (registri za instrukcije)
+
+(instrukcija s) je azuriranje statusa registra
+
+postoje i uslovne instrukcije koje se koriste umesto brancheva
+
+u arm nema deljenje, umesto toga se koriste __(u)(div/mod)si3 fje
+
+shifter operandi se koriste u aritmetickim operacijama
+add r0,r1,[r2,lsl#2]<-treci operand
+r0=r1+r2<<2
+mozemo da siftujemo bitovski i preko mov
+mov r0,r1,lsl #1
+u r0 upisujemo r1<<1
+
+r0=r1+4*r2 => racunanje itog elem u nizu
+
+ldr - load reg -> ucita nesto u registar
+str - store reg ->cuvanje podataka iz reg u mem
+ldrsh - ucitava pola registara, popunice se  16b/2B i ostatak se dopunjuje nulama ili kecevima u zavisnosti od znaka broja
+lrdb 1B
+
+kompajlovanje:
+arm-linux-gnueabi-gcc imekoda.c imekoda.s
+qemu-arm ./a.out
